@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract Law AI Exam Prep</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#2563eb', // blue-600
+                        primaryDark: '#1d4ed8', // blue-700
+                        secondary: '#f8fafc', // slate-50
+                        accent: '#eff6ff', // blue-50
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { max-height: 0; opacity: 0; }
+            to { max-height: 1000px; opacity: 1; }
+        }
+        
+        .slide-down {
+            animation: slideDown 0.6s ease-out forwards;
+            overflow: hidden;
+        }
+        
+        /* Toast Notification */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 50;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: visibility 0.3s, opacity 0.3s linear;
+            opacity: 0;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-secondary text-slate-800 min-h-screen pb-16 font-sans">
+
+    <!-- Header Section -->
+    <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-10">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center text-center md:text-left">
+                <div class="bg-blue-100 text-primary p-3 rounded-xl mr-4">
+                    <i class="fa-solid fa-scale-balanced text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight">Contract Law AI Prep</h1>
+                    <p class="text-sm font-medium text-slate-500">Units 1 & 2 • Indian Contract Act, 1872</p>
+                </div>
+            </div>
+            
+            <!-- API Key Input Area -->
+            <div class="flex items-center bg-slate-50 border border-slate-200 rounded-lg p-2 w-full md:w-auto">
+                <i class="fa-solid fa-key text-slate-400 ml-2 mr-3"></i>
+                <input type="password" id="api-key-input" placeholder="Enter Gemini API Key" 
+                       class="bg-transparent border-none focus:outline-none text-sm w-full md:w-48 text-slate-700 placeholder-slate-400">
+                <button onclick="saveApiKey()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold px-3 py-1.5 rounded-md ml-2 transition-colors">
+                    Save
+                </button>
+            </div>
+        </div>
+        
+        <!-- Tabs Navigation -->
+        <div class="max-w-6xl mx-auto px-4 mt-2">
+            <nav class="flex space-x-2 overflow-x-auto no-scrollbar pb-3 justify-start lg:justify-center" id="tabs-container">
+                <button onclick="switchTab('paper1')" id="tab-paper1" class="tab-btn active px-5 py-2 rounded-full font-semibold text-sm transition-all duration-200 whitespace-nowrap bg-primary text-white shadow-md border border-transparent">
+                    Paper 1
+                </button>
+                <button onclick="switchTab('paper2')" id="tab-paper2" class="tab-btn px-5 py-2 rounded-full font-semibold text-sm transition-all duration-200 whitespace-nowrap bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                    Paper 2
+                </button>
+                <button onclick="switchTab('paper3')" id="tab-paper3" class="tab-btn px-5 py-2 rounded-full font-semibold text-sm transition-all duration-200 whitespace-nowrap bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                    Paper 3
+                </button>
+                <button onclick="switchTab('paper4')" id="tab-paper4" class="tab-btn px-5 py-2 rounded-full font-semibold text-sm transition-all duration-200 whitespace-nowrap bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                    Paper 4
+                </button>
+                <button onclick="switchTab('paper5')" id="tab-paper5" class="tab-btn px-5 py-2 rounded-full font-semibold text-sm transition-all duration-200 whitespace-nowrap bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                    Paper 5
+                </button>
+                <button onclick="switchTab('paper6')" id="tab-paper6" class="tab-btn px-5 py-2 rounded-full font-semibold text-sm transition-all duration-200 whitespace-nowrap bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                    Paper 6
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-4xl mx-auto px-4 mt-8">
+        <div id="content-container"></div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast"></div>
+
+    <script>
+        // Database of Questions and Answers for 6 Papers
+        const examData = {
+            paper1: {
+                title: "Paper 1: Fundamentals of Contract",
+                partA: [
+                    { q: "Which section of the Indian Contract Act, 1872 defines a 'Proposal'?", options: ["Section 2(a)", "Section 2(b)", "Section 2(c)", "Section 2(d)"], correct: 0 },
+                    { q: "An agreement enforceable by law is known as?", options: ["A Void Agreement", "A Proposal", "A Contract", "A Promise"], correct: 2 },
+                    { q: "Which of the following is an essential condition for a valid acceptance?", options: ["It can be conditional.", "It must be absolute and unqualified.", "It can be silent.", "It must be partially accepted."], correct: 1 },
+                    { q: "A display of goods in a shop window with a price tag is an example of?", options: ["An Offer", "An Acceptance", "A Counter Offer", "An Invitation to Proposal"], correct: 3 },
+                    { q: "Proposal + Acceptance = ?", options: ["Consideration", "Contract", "Promise", "Voidable Agreement"], correct: 2 }
+                ],
+                partB: [
+                    { q: "Define 'Consideration' under the Indian Contract Act.", a: "According to Sec 2(d), when at the desire of the promisor, the promisee or any other person has done or abstained from doing something, such act or abstinence is called consideration for the promise." },
+                    { q: "Distinguish between an Offer and an Invitation to Offer.", a: "An offer is a final expression of willingness to be bound by acceptance. An invitation to offer is merely an attempt to induce others to make an offer (e.g., menu card, shop display)." },
+                    { q: "What is a 'Void Agreement'?", a: "An agreement not enforceable by law is said to be void [Section 2(g)]. It has no legal effect from the very beginning (void ab initio)." },
+                    { q: "Briefly explain the concept of 'Free Consent'.", a: "Consent is said to be free when it is not caused by: 1) Coercion, 2) Undue influence, 3) Fraud, 4) Misrepresentation, or 5) Mistake." },
+                    { q: "State the facts of Carlill v. Carbolic Smoke Ball Co.", a: "A company advertised a reward for anyone who caught the flu after using their product. Mrs. Carlill used it, caught the flu, and sued. The court held it was a 'general offer' accepted by performing the conditions." }
+                ]
+            },
+            paper2: {
+                title: "Paper 2: Communication & Privity",
+                partA: [
+                    { q: "When does the communication of a proposal become complete?", options: ["When it is posted.", "When it comes to the knowledge of the person to whom it is made.", "When it is written.", "When it is received by post office."], correct: 1 },
+                    { q: "An agreement not enforceable by law is said to be?", options: ["Valid Contract", "Voidable Contract", "Illegal Agreement", "A Void Agreement"], correct: 3 },
+                    { q: "According to the Indian Contract Act, who is competent to contract?", options: ["A minor", "A person of unsound mind", "A person who has attained majority, is of sound mind, and is not disqualified by law.", "An alien enemy"], correct: 2 },
+                    { q: "Acceptance sent through post is complete as against the proposer when?", options: ["When it reaches the proposer.", "When it is put into a course of transmission to him, out of the acceptor's power.", "When the proposer reads it.", "When the acceptor writes it."], correct: 1 },
+                    { q: "Which case is a landmark judgment on general offers made to the public?", options: ["Balfour v. Balfour", "Mohori Bibee v. Dharmodas Ghose", "Carlill v. Carbolic Smoke Ball Co.", "Lalman Shukla v. Gauri Dutt"], correct: 2 }
+                ],
+                partB: [
+                    { q: "Define the term 'Acceptance' according to Section 2(b).", a: "When the person to whom the proposal is made signifies his assent thereto, the proposal is said to be accepted. A proposal, when accepted, becomes a promise." },
+                    { q: "Differentiate between Executed and Executory contracts.", a: "An executed contract is one where both parties have performed their obligations. An executory contract is one where obligations are pending to be performed by one or both parties." },
+                    { q: "Explain the term 'Privity of Contract'.", a: "The doctrine of Privity of Contract states that only the parties to a contract can sue each other to enforce rights and obligations. A stranger to the contract cannot sue." },
+                    { q: "What is a 'Cross Offer'?", a: "When two parties make identical offers to each other in ignorance of each other's offer, they are called cross offers. They do not constitute a valid contract." },
+                    { q: "State the rule established in Bhagwandas v. Girdhari Lal & Co.", a: "The Supreme Court held that in the case of contracts made over the telephone, the contract is complete at the place where the acceptance is heard by the offeror." }
+                ]
+            },
+            paper3: {
+                title: "Paper 3: Types of Offers & Intent",
+                partA: [
+                    { q: "Consideration must move at the desire of the?", options: ["Promisee", "Promisor", "Third Party", "Stranger"], correct: 1 },
+                    { q: "A proposal when accepted becomes a?", options: ["Promise", "Contract", "Consideration", "Agreement"], correct: 0 },
+                    { q: "Which of these is NOT an essential of a valid contract?", options: ["Free consent", "Lawful object", "Must always be in writing", "Competency of parties"], correct: 2 },
+                    { q: "If an offer is made to the world at large, it is called?", options: ["Specific Offer", "Cross Offer", "General Offer", "Counter Offer"], correct: 2 },
+                    { q: "The term 'Quid pro quo' in the context of contract law means?", options: ["Breach of contract", "Something in return", "Void agreement", "Without consideration"], correct: 1 }
+                ],
+                partB: [
+                    { q: "Define a 'Voidable Contract' as per Section 2(i).", a: "An agreement which is enforceable by law at the option of one or more of the parties thereto, but not at the option of the other or others, is a voidable contract." },
+                    { q: "What constitutes a 'Standing or Continuing Offer'?", a: "An offer that is allowed to remain open for acceptance over a period of time is a standing offer (e.g., tenders for supplying goods over a year)." },
+                    { q: "Briefly explain the 'Postal Rule' of communication of acceptance.", a: "Acceptance is complete against the offeror when the letter is posted. It is complete against the acceptor only when the letter reaches the offeror." },
+                    { q: "What is a 'Counter Offer'?", a: "When an offeree accepts the offer subject to modifications or conditions, it acts as a rejection of the original offer and constitutes a counter-offer." },
+                    { q: "State the principle established in Balfour v. Balfour.", a: "The court held that agreements of a purely domestic or social nature (like a husband promising allowance to a wife) do not create a binding contract because they lack the intention to create legal relations." }
+                ]
+            },
+            paper4: {
+                title: "Paper 4: Counter Offers & Acceptances",
+                partA: [
+                    { q: "A counter offer acts as a?", options: ["Rejection of the original offer", "Conditional Acceptance", "Binding Contract", "General Offer"], correct: 0 },
+                    { q: "If A and B make identical offers to each other in ignorance of each other's offer, it is?", options: ["A Contract", "A Cross Offer", "A Counter Offer", "A Specific Offer"], correct: 1 },
+                    { q: "Accepting an offer with a 'Yes, but...' condition amounts to?", options: ["Absolute Acceptance", "Valid Contract", "A Counter Offer", "Revocation"], correct: 2 },
+                    { q: "Standard form of contracts are also known as?", options: ["Contracts of Adhesion", "Voidable Contracts", "Executed Contracts", "Contingent Contracts"], correct: 0 },
+                    { q: "An offer that can be accepted by anyone who performs the condition is a?", options: ["Specific Offer", "Counter Offer", "General Offer", "Cross Offer"], correct: 2 }
+                ],
+                partB: [
+                    { q: "What is the effect of a Counter Offer?", a: "A counter offer acts as a rejection of the original offer. Once a counter offer is made, the original offer lapses and cannot be accepted subsequently." },
+                    { q: "Distinguish between General Offer and Specific Offer.", a: "A Specific Offer is made to a definite person or group and can only be accepted by them. A General Offer is made to the world at large and can be accepted by anyone who performs the specified conditions." },
+                    { q: "What are the essentials of a valid proposal?", a: "It must be communicated, made with a view to obtain assent, must create legal relations, terms must be certain, and it should not contain a term whose non-compliance amounts to acceptance." },
+                    { q: "Define 'Promise' under Section 2(b).", a: "When the person to whom the proposal is made signifies his assent thereto, the proposal is said to be accepted. A proposal, when accepted, becomes a promise." },
+                    { q: "What is a Standard Form of Contract?", a: "It is a pre-drafted contract by one party (usually a large corporation) with pre-printed terms, offered on a 'take it or leave it' basis. The other party has little to no bargaining power." }
+                ]
+            },
+            paper5: {
+                title: "Paper 5: Exceptions to Consideration & E-Contracts",
+                partA: [
+                    { q: "Which of the following is an exception to the rule 'No consideration, no contract'?", options: ["Commercial deals", "Agreements made out of natural love and affection", "Contracts with minors", "Agreements in restraint of trade"], correct: 1 },
+                    { q: "Consideration under the Indian Contract Act can be?", options: ["Past only", "Present only", "Future only", "Past, Present, or Future"], correct: 3 },
+                    { q: "A promises to donate Rs. 10,000 to a charity but fails to pay. Can the charity sue?", options: ["Yes, it is a valid promise", "No, due to lack of consideration", "Yes, charity is a public good", "No, it is a voidable agreement"], correct: 1 },
+                    { q: "E-Contracts are legally recognized in India under the Contract Act alongside the:", options: ["Sale of Goods Act", "Information Technology Act, 2000", "Companies Act", "Consumer Protection Act"], correct: 1 },
+                    { q: "When can a proposal be revoked?", options: ["Any time before the communication of its acceptance is complete as against the proposer.", "After acceptance is received.", "Never, once sent.", "Only by a court order."], correct: 0 }
+                ],
+                partB: [
+                    { q: "State the exceptions to the rule 'No consideration, no contract' (Section 25).", a: "The exceptions are: 1) Agreements made out of natural love and affection (must be registered and in writing), 2) Promise to compensate for past voluntary services, and 3) Promise to pay a time-barred debt." },
+                    { q: "Is past consideration valid in India?", a: "Yes. Under Indian law (unlike English law), consideration can be past, present, or future. If an act was done at the desire of the promisor in the past, it serves as valid consideration." },
+                    { q: "Explain the communication of revocation of an offer.", a: "Revocation is complete as against the person who makes it, when it is put into transmission. It is complete as against the person to whom it is made, when it comes to his knowledge." },
+                    { q: "What are E-contracts?", a: "E-contracts are agreements formed electronically, often over the internet (e.g., click-wrap agreements). They are valid and legally enforceable under the IT Act, 2000 and the Indian Contract Act." },
+                    { q: "Can a proposal be revoked after acceptance is posted by the offeree?", a: "No. Once the offeree posts the letter of acceptance, it is complete as against the proposer, and the proposer loses the right to revoke the offer." }
+                ]
+            },
+            paper6: {
+                title: "Paper 6: Landmark Cases & Void Agreements",
+                partA: [
+                    { q: "Consideration must be?", options: ["Equal in value to the promise", "Real and not illusory", "Always monetary", "Paid immediately"], correct: 1 },
+                    { q: "The case of Lalman Shukla v. Gauri Dutt relates to?", options: ["Free consent", "Adequacy of consideration", "Communication of offer is necessary for acceptance", "Privity of contract"], correct: 2 },
+                    { q: "An agreement with an unlawful consideration or object is?", options: ["Valid", "Void", "Voidable", "Illegal but enforceable"], correct: 1 },
+                    { q: "Bidding at an auction sale is an example of?", options: ["An Offer", "An Acceptance", "An Invitation to Offer", "A Contract"], correct: 0 },
+                    { q: "A menu card at a restaurant is legally considered?", options: ["A Specific Offer", "An Invitation to Proposal", "A Continuing Offer", "A Void Agreement"], correct: 1 }
+                ],
+                partB: [
+                    { q: "State the rule established in Lalman Shukla v. Gauri Dutt.", a: "The court held that an offer cannot be accepted unless it has been brought to the knowledge of the person accepting it. One cannot accept an offer in ignorance of it." },
+                    { q: "When is the consideration or object of an agreement considered unlawful?", a: "Under Section 23, it is unlawful if: it is forbidden by law, defeats the provisions of any law, is fraudulent, involves injury to a person or property, or the court regards it as immoral or opposed to public policy." },
+                    { q: "Differentiate between void and voidable contracts.", a: "A void agreement has no legal effect and cannot be enforced by anyone. A voidable contract is valid until it is avoided (cancelled) by the party whose consent was not free." },
+                    { q: "What is a continuing offer? Give an example.", a: "An offer which is open for acceptance over a period of time is a continuing or standing offer. Example: A tender to supply coal to a railway company as and when required over 12 months." },
+                    { q: "Discuss the validity of an agreement without consideration if made out of natural love and affection.", a: "It is valid if it meets three conditions under Sec 25(1): 1) It is in writing, 2) It is registered under the law, and 3) It is made on account of natural love and affection between near relatives." }
+                ]
+            }
+        };
+
+        // UI Utility: Show Toast Notification
+        function showToast(message, isError = false) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.style.backgroundColor = isError ? "#ef4444" : "#10b981"; // Red or Green
+            toast.className = "show";
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load API Key if exists
+            const savedKey = localStorage.getItem('gemini_api_key');
+            if (savedKey) {
+                document.getElementById('api-key-input').value = savedKey;
+            }
+            switchTab('paper1'); // Render first paper
+        });
+
+        // Save API Key
+        function saveApiKey() {
+            const key = document.getElementById('api-key-input').value.trim();
+            if (key) {
+                localStorage.setItem('gemini_api_key', key);
+                showToast("API Key Saved Successfully!");
+            } else {
+                showToast("Please enter a valid API Key.", true);
+            }
+        }
+
+        // Create MCQ HTML
+        function createMcqItem(index, question, options, correctIndex) {
+            let optionsHtml = '';
+            options.forEach((opt, idx) => {
+                optionsHtml += `
+                    <button class="w-full text-left p-3 pr-10 border border-slate-200 rounded-lg text-slate-600 font-medium hover:bg-slate-50 hover:border-primary focus:outline-none transition-colors duration-200 cursor-pointer mb-2 relative group" onclick="handleMcqSelect(this, ${correctIndex}, ${idx})">
+                        <span class="inline-block w-6 font-semibold text-slate-400 group-hover:text-primary transition-colors">${String.fromCharCode(65 + idx)}.</span> 
+                        <span class="option-text">${opt}</span>
+                    </button>
+                `;
+            });
+
+            return `
+                <div class="bg-white border border-slate-200 rounded-xl mb-4 shadow-sm p-5 transition-shadow duration-200 hover:shadow-md">
+                    <div class="flex items-start mb-4">
+                        <span class="font-bold text-primary mr-3 mt-0.5 w-8 flex-shrink-0">Q${index}.</span>
+                        <span class="font-semibold text-slate-700 leading-snug">${question}</span>
+                    </div>
+                    <div class="ml-11 mcq-options">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Create Subjective Item HTML
+        function createSubjectiveItem(index, question, answer, paperKey) {
+            // Using a unique ID for textarea and results to link them easily
+            return `
+                <div class="bg-white border border-slate-200 rounded-xl mb-5 shadow-sm p-5 transition-shadow duration-200 hover:shadow-md">
+                    <div class="flex items-start mb-3">
+                        <span class="font-bold text-primary mr-3 mt-0.5 w-8 flex-shrink-0">Q${index}.</span>
+                        <span class="font-semibold text-slate-700 leading-snug text-lg">${question}</span>
+                    </div>
+                    
+                    <div class="ml-11">
+                        <textarea id="ans-${paperKey}-${index}" 
+                            class="w-full border border-slate-300 rounded-lg p-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary mb-3 text-slate-700 bg-slate-50 transition-colors" 
+                            rows="3" placeholder="Type your answer here... (Focus on meaning, exact words not required)"></textarea>
+                        
+                        <div class="flex justify-between items-center">
+                            <button id="btn-check-${paperKey}-${index}" onclick="evaluateSubjectiveAnswer(this, '${paperKey}', ${index-1})" 
+                                class="bg-primary text-white px-5 py-2 rounded-lg font-semibold hover:bg-primaryDark transition-colors flex items-center gap-2 shadow-sm">
+                                <i class="fa-solid fa-robot"></i> Check Answer
+                            </button>
+                        </div>
+
+                        <!-- Results Container (Hidden by default) -->
+                        <div id="result-${paperKey}-${index}" class="hidden mt-5 pt-4 border-t border-slate-200">
+                            <!-- AI Feedback Container -->
+                            <div id="feedback-${paperKey}-${index}" class="mb-4 text-sm p-4 rounded-lg bg-slate-50 border border-slate-200">
+                            </div>
+                            
+                            <!-- Model Answer -->
+                            <div class="p-4 bg-green-50 text-green-900 border border-green-200 rounded-lg">
+                                <span class="font-bold block mb-1 uppercase tracking-wider text-xs text-green-700"><i class="fa-solid fa-check-double mr-1"></i> Exact Model Answer:</span>
+                                <span class="text-sm font-medium leading-relaxed">${answer}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Paper
+        function renderPaper(paperKey) {
+            const paper = examData[paperKey];
+            const container = document.getElementById('content-container');
+            
+            let html = `
+                <div class="fade-in pb-8">
+                    <div class="mb-8 text-center border-b border-slate-200 pb-4">
+                        <h2 class="text-3xl font-extrabold text-slate-800">${paper.title}</h2>
+                    </div>
+
+                    <!-- Part A: MCQs -->
+                    <div class="mb-10">
+                        <div class="flex items-center mb-6">
+                            <div class="bg-blue-100 text-blue-800 font-bold px-3 py-1 rounded-md text-sm mr-4 border border-blue-200 shadow-sm">Part A</div>
+                            <h2 class="text-xl font-bold text-slate-800">MCQs (5 x 1 = 5 Marks)</h2>
+                        </div>
+                        <div>
+            `;
+            
+            paper.partA.forEach((item, index) => {
+                html += createMcqItem(index + 1, item.q, item.options, item.correct);
+            });
+            
+            html += `
+                        </div>
+                    </div>
+                    
+                    <hr class="border-slate-200 mb-10 border-dashed border-2">
+
+                    <!-- Part B: Subjective -->
+                    <div>
+                        <div class="flex items-center mb-6">
+                            <div class="bg-indigo-100 text-indigo-800 font-bold px-3 py-1 rounded-md text-sm mr-4 border border-indigo-200 shadow-sm">Part B</div>
+                            <h2 class="text-xl font-bold text-slate-800">Type & Grade (5 x 2 = 10 Marks)</h2>
+                        </div>
+                        <div>
+            `;
+            
+            paper.partB.forEach((item, index) => {
+                html += createSubjectiveItem(index + 1, item.q, item.a, paperKey);
+            });
+            
+            html += `
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // Switch Tabs
+        function switchTab(paperKey) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-5 py-2 rounded-full font-semibold text-sm transition-all duration-200 whitespace-nowrap bg-white text-slate-600 hover:bg-slate-100 border border-slate-200";
+            });
+            
+            const activeTab = document.getElementById(`tab-${paperKey}`);
+            activeTab.className = "tab-btn active px-5 py-2 rounded-full font-semibold text-sm transition-all duration-200 whitespace-nowrap bg-primary text-white shadow-md border border-transparent";
+            
+            renderPaper(paperKey);
+        }
+
+        // Handle MCQ Logic
+        window.handleMcqSelect = function(btn, correctIndex, optionIndex) {
+            const container = btn.closest('.mcq-options');
+            const buttons = container.querySelectorAll('button');
+
+            buttons.forEach((b, idx) => {
+                b.disabled = true;
+                b.classList.remove('hover:bg-slate-50', 'hover:border-primary', 'cursor-pointer');
+                
+                if (idx === correctIndex) {
+                    b.classList.add('bg-green-50', 'border-green-500', 'text-green-800');
+                    b.classList.remove('border-slate-200', 'text-slate-600');
+                    if(!b.innerHTML.includes('fa-circle-check')) {
+                        b.innerHTML += '<i class="fa-solid fa-circle-check absolute right-4 top-1/2 -translate-y-1/2 text-green-500 text-lg fade-in"></i>';
+                    }
+                } else if (idx === optionIndex && idx !== correctIndex) {
+                    b.classList.add('bg-red-50', 'border-red-500', 'text-red-800');
+                    b.classList.remove('border-slate-200', 'text-slate-600');
+                    if(!b.innerHTML.includes('fa-circle-xmark')) {
+                        b.innerHTML += '<i class="fa-solid fa-circle-xmark absolute right-4 top-1/2 -translate-y-1/2 text-red-500 text-lg fade-in"></i>';
+                    }
+                } else {
+                    b.classList.add('opacity-50');
+                }
+            });
+        };
+
+        // Handle Subjective AI Evaluation
+        window.evaluateSubjectiveAnswer = async function(btn, paperKey, qIndex) {
+            const apiKey = localStorage.getItem('gemini_api_key');
+            if (!apiKey) {
+                showToast("Please enter and save your Gemini API Key first.", true);
+                document.getElementById('api-key-input').focus();
+                return;
+            }
+
+            const visualIndex = qIndex + 1;
+            const textArea = document.getElementById(`ans-${paperKey}-${visualIndex}`);
+            const studentAnswer = textArea.value.trim();
+
+            if (studentAnswer.length < 5) {
+                showToast("Please type a proper answer before checking.", true);
+                return;
+            }
+
+            // UI Update: Loading State
+            const originalBtnHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Evaluating...';
+            btn.disabled = true;
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+            textArea.disabled = true;
+
+            const questionData = examData[paperKey].partB[qIndex];
+            
+            // Construct Prompt
+            const prompt = `You are an expert law professor grading an internal exam on the Indian Contract Act 1872. 
+Question (2 Marks): "${questionData.q}"
+Model Answer: "${questionData.a}"
+Student Answer: "${studentAnswer}"
+
+Evaluate the student's answer. Ignore exact bookish language/grammar. Focus on whether the core legal meaning and concepts are present. Length should be fitting for a 2-mark question.
+
+Output EXACTLY in this format:
+Grade: [Write ONLY one of these: CORRECT, PARTIALLY CORRECT, or INCORRECT]
+Feedback: [Provide 1 to 2 short, encouraging sentences pointing out any specific mistakes, missing keywords, or confirming it's a great answer.]`;
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }]
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error("API call failed. Check key validity.");
+                }
+
+                const data = await response.json();
+                const aiResponseText = data.candidates[0].content.parts[0].text;
+                
+                renderFeedbackUI(aiResponseText, paperKey, visualIndex);
+                
+                // Hide button, keep textarea disabled
+                btn.style.display = 'none';
+
+            } catch (error) {
+                console.error(error);
+                showToast("Error connecting to AI. Check your API key or network.", true);
+                // Reset UI
+                btn.innerHTML = originalBtnHtml;
+                btn.disabled = false;
+                btn.classList.remove('opacity-80', 'cursor-not-allowed');
+                textArea.disabled = false;
+            }
+        };
+
+        // Parse and Render AI Feedback
+        function renderFeedbackUI(responseText, paperKey, visualIndex) {
+            const resultDiv = document.getElementById(`result-${paperKey}-${visualIndex}`);
+            const feedbackContainer = document.getElementById(`feedback-${paperKey}-${visualIndex}`);
+            
+            // Parse response
+            let grade = "UNKNOWN";
+            let feedbackText = responseText;
+            
+            const gradeMatch = responseText.match(/Grade:\s*(.*)/i);
+            const feedbackMatch = responseText.match(/Feedback:\s*([\s\S]*)/i);
+            
+            if (gradeMatch) grade = gradeMatch[1].trim().toUpperCase();
+            if (feedbackMatch) feedbackText = feedbackMatch[1].trim();
+
+            // Set colors based on grade
+            let gradeHtml = '';
+            let borderClass = 'border-slate-200';
+            
+            if (grade.includes("PARTIALLY")) {
+                gradeHtml = `<span class="text-orange-600 font-extrabold text-lg"><i class="fa-solid fa-circle-exclamation mr-1"></i> PARTIALLY CORRECT</span>`;
+                borderClass = 'border-orange-300 bg-orange-50';
+            } else if (grade.includes("INCORRECT")) {
+                gradeHtml = `<span class="text-red-600 font-extrabold text-lg"><i class="fa-solid fa-xmark mr-1"></i> INCORRECT</span>`;
+                borderClass = 'border-red-300 bg-red-50';
+            } else if (grade.includes("CORRECT")) {
+                gradeHtml = `<span class="text-green-600 font-extrabold text-lg"><i class="fa-solid fa-check mr-1"></i> CORRECT</span>`;
+                borderClass = 'border-green-300 bg-green-50';
+            } else {
+                gradeHtml = `<span class="text-blue-600 font-extrabold text-lg"><i class="fa-solid fa-comment-dots mr-1"></i> FEEDBACK</span>`;
+            }
+
+            feedbackContainer.className = `mb-4 p-4 rounded-lg border shadow-sm ${borderClass}`;
+            feedbackContainer.innerHTML = `
+                <div class="mb-2">${gradeHtml}</div>
+                <div class="text-slate-700 font-medium text-sm leading-relaxed">${feedbackText.replace(/\n/g, '<br>')}</div>
+            `;
+
+            // Reveal Container
+            resultDiv.classList.remove('hidden');
+            resultDiv.classList.add('slide-down');
+        }
+
+    </script>
+</body>
+</html>
